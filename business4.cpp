@@ -1,45 +1,31 @@
 #include <iostream>
-#include <vector>
+#include <fstream>
+#include <string>
 using namespace std;
 
-// Function for Bubble Sort
-void bubbleSort(vector<int>& arr) {
-    int n = arr.size();
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                swap(arr[j], arr[j + 1]);
-            }
-        }
-    }
-}
+// Function prototype for progress tracking
+void viewPerformance(const string &username);
 
-// Function for Selection Sort
-void selectionSort(vector<int>& arr) {
-    int n = arr.size();
-    for (int i = 0; i < n - 1; i++) {
-        int minIndex = i;
-        for (int j = i + 1; j < n; j++) {
-            if (arr[j] < arr[minIndex]) {
-                minIndex = j;
-            }
-        }
-        swap(arr[i], arr[minIndex]);
+// Function to view performance
+void viewPerformance(const string &username) {
+    ifstream file("performance.txt");
+    if (!file.is_open()) {
+        cout << RED << "Error opening performance file!" << RESET << endl;
+        return;
     }
-}
 
-// Function for Binary Search
-int binarySearch(const vector<int>& arr, int key) {
-    int low = 0, high = arr.size() - 1;
-    while (low <= high) {
-        int mid = low + (high - low) / 2;
-        if (arr[mid] == key) {
-            return mid;
-        } else if (arr[mid] < key) {
-            low = mid + 1;
-        } else {
-            high = mid - 1;
+    string line;
+    bool recordFound = false;
+    cout << CYAN << "\nPerformance Report for " << username << RESET << endl;
+    while (getline(file, line)) {
+        if (line.find(username) != string::npos) {
+            cout << line << endl;
+            recordFound = true;
         }
     }
-    return -1; // Key not found
+    file.close();
+
+    if (!recordFound) {
+        cout << RED << "No performance data found for " << username << "!" << RESET << endl;
+    }
 }
